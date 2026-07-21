@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DrinkIt</title>
+    <meta name="description" content="DrinkIt is a fictional quick-commerce UI demo with realistic carts and shareable receipts.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://images.unsplash.com">
+    <link rel="stylesheet" href="css/styles.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#" id="logoLink" aria-label="DrinkIt home">
+          <span class="brand-mark">D</span>
+          <span class="brand-copy"><strong id="siteName">DrinkIt</strong><small>Fictional quick-cart demo</small></span>
+        </a>
+        <div class="search-wrap sticky-search">
+          <span class="search-icon" aria-hidden="true">Search</span>
+          <input id="searchInput" type="search" autocomplete="off" placeholder="Search whisky, beer, snacks, mixers...">
+          <div id="suggestions" class="suggestions" hidden></div>
+        </div>
+        <a class="icon-btn" href="wishlist.html" aria-label="Wishlist" title="Wishlist">Heart</a>
+        <button class="icon-btn" id="themeToggle" aria-label="Toggle dark mode" title="Toggle dark mode">Mode</button>
+        <a class="admin-link" href="admin/">Admin</a>
+      </header>
+
+      <main>
+        <section class="hero">
+          <div class="hero-media" role="img" aria-label="Premium bottles and party essentials"></div>
+          <div class="hero-content">
+            <p class="eyebrow">Premium fictional quick-commerce</p>
+            <h1>Build a party cart that feels real.</h1>
+            <p>Browse a huge demo catalog, use fake offers, share carts, and download a premium invoice-style receipt. No sales, payments, addresses, OTPs, or deliveries exist here.</p>
+            <div class="hero-actions">
+              <a class="primary-btn ripple" href="#catalog">Browse catalog</a>
+              <button class="secondary-btn ripple" id="shareCartTop">Share cart</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Party Builder</p>
+              <h2>Auto-fill a balanced demo cart</h2>
+            </div>
+          </div>
+          <div id="partyBuilder" class="party-builder"></div>
+        </section>
+
+        <section class="section compact">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Categories</p>
+              <h2>Shop by shelf</h2>
+            </div>
+            <div class="segmented" id="availabilityFilter">
+              <button class="active ripple" data-availability="all">All</button>
+              <button class="ripple" data-availability="available">In stock</button>
+            </div>
+          </div>
+          <div id="categoryRail" class="category-rail skeleton-zone"></div>
+        </section>
+
+        <section class="section offers-band">
+          <div>
+            <p class="eyebrow">Demo Offers</p>
+            <h2>Weekend Party Sale</h2>
+          </div>
+          <div class="offer-chips">
+            <span>Buy 2 Get 5% Off</span>
+            <span>Festival Offers</span>
+            <span>Happy Hours</span>
+            <span>Premium Collection</span>
+          </div>
+        </section>
+
+        <section class="shelf-wrap" id="featuredShelves"></section>
+
+        <section class="catalog-shell" id="catalog">
+          <aside class="filters" aria-label="Product filters">
+            <div class="filter-head">
+              <h2>Filters</h2>
+              <button id="clearFilters" class="text-btn">Clear</button>
+            </div>
+            <label>Category<select id="categoryFilter"><option value="">All categories</option></select></label>
+            <label>Brand<select id="brandFilter"><option value="">All brands</option></select></label>
+            <label>Type<select id="typeFilter"><option value="">All types</option></select></label>
+            <label>Size<select id="sizeFilter"><option value="">All sizes</option></select></label>
+            <label>Minimum rating<input id="ratingFilter" type="range" min="0" max="5" step="0.5" value="0"><span id="ratingValue">Any</span></label>
+            <label>Max price<input id="priceFilter" type="range" min="99" max="30000" step="100" value="30000"><span id="priceValue">Any</span></label>
+          </aside>
+
+          <section class="products-area">
+            <div class="section-head">
+              <div>
+                <p class="eyebrow" id="resultCount">Catalog</p>
+                <h2 id="catalogTitle">Featured Products</h2>
+              </div>
+              <select id="sortSelect" class="sort-select" aria-label="Sort products">
+                <option value="featured">Featured</option>
+                <option value="priceAsc">Price: low to high</option>
+                <option value="priceDesc">Price: high to low</option>
+                <option value="rating">Top rated</option>
+                <option value="recent">Recently added</option>
+              </select>
+            </div>
+            <div id="productGrid" class="product-grid skeleton-zone"></div>
+            <div class="load-more-wrap"><button id="loadMore" class="secondary-btn ripple">Load more</button></div>
+          </section>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <strong>DrinkIt</strong>
+        <p>DrinkIt is a fictional demo website created for frontend practice and entertainment purposes only. No products are sold, no payments are accepted, and no deliveries are made.</p>
+      </footer>
+    </div>
+
+    <button id="cartFab" class="cart-fab" aria-label="Open cart">
+      <span>Cart</span><strong id="cartCount">0</strong>
+    </button>
+
+    <nav class="bottom-nav" aria-label="Mobile navigation">
+      <a href="#">Home</a>
+      <a href="#catalog">Search</a>
+      <a href="wishlist.html">Wishlist</a>
+      <button id="bottomCart">Cart</button>
+      <a href="admin/">Menu</a>
+    </nav>
+
+    <aside id="cartDrawer" class="cart-drawer" aria-label="Shopping cart" aria-hidden="true">
+      <div class="drawer-head">
+        <div><p class="eyebrow">Demo cart</p><h2>Your cart</h2><small id="deliveryEta">ETA 18-24 min</small></div>
+        <button class="icon-btn" id="closeCart" aria-label="Close cart">x</button>
+      </div>
+      <div id="couponBox" class="coupon-box"></div>
+      <div id="cartItems" class="cart-items"></div>
+      <div id="recoveryKit" class="recovery-kit" hidden></div>
+      <div class="totals">
+        <div><span>Subtotal</span><strong id="subtotal">Rs. 0</strong></div>
+        <div><span>Estimated savings</span><strong id="savings">Rs. 0</strong></div>
+        <div><span>Coupon</span><strong id="couponDiscount">-Rs. 0</strong></div>
+        <div><span>Platform fee</span><strong id="platformFee">Rs. 0</strong></div>
+        <div><span>GST</span><strong id="gst">Rs. 0</strong></div>
+        <div class="grand"><span>Grand total</span><strong id="grandTotal">Rs. 0</strong></div>
+      </div>
+      <div class="drawer-actions">
+        <button id="shareCart" class="secondary-btn ripple">Share cart</button>
+        <button id="downloadReceipt" class="secondary-btn ripple">Download invoice</button>
+        <button id="placeOrder" class="primary-btn ripple">Place order</button>
+      </div>
+      <p class="microcopy">Fictional cart only. No checkout, address, OTP, payment, or delivery is available.</p>
+    </aside>
+    <div id="overlay" class="overlay" hidden></div>
+
+    <div id="guestModal" class="modal-backdrop" hidden>
+      <form class="modal" id="guestForm">
+        <p class="eyebrow">Welcome to DrinkIt</p>
+        <h2>Enter your name</h2>
+        <input id="guestName" type="text" placeholder="Rahul, Akshay, Party Boy..." autofocus>
+        <button class="primary-btn ripple" type="submit">Continue</button>
+      </form>
+    </div>
+
+    <div id="successModal" class="modal-backdrop" hidden>
+      <div class="modal success">
+        <div class="tick">OK</div>
+        <h2>Order Placed Successfully</h2>
+        <p>This is a fictional demonstration website.</p>
+        <p>No payment has been processed. No order has been placed. Nothing will be delivered.</p>
+        <button class="primary-btn ripple" id="backHome">Return home</button>
+      </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/store.js"></script>
+    <script src="js/cart-shared.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DrinkIt Product</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+  </head>
+  <body>
+    <main class="detail-shell">
+      <header class="topbar">
+        <a class="brand" href="./">
+          <span class="brand-mark">D</span>
+          <span class="brand-copy"><strong>DrinkIt</strong><small>Product detail</small></span>
+        </a>
+        <div class="search-wrap"><span class="search-icon"></span><input id="detailSearch" placeholder="Search and return home"></div>
+        <a class="icon-btn" href="wishlist.html">Heart</a>
+        <button class="icon-btn" id="openCart">Cart</button>
+      </header>
+
+      <section id="productDetail" class="detail-grid"></section>
+      <section class="section">
+        <div class="section-head"><div><p class="eyebrow">Frequently Bought Together</p><h2>Complete the cart</h2></div></div>
+        <div id="togetherGrid" class="mini-grid"></div>
+      </section>
+      <section class="section">
+        <div class="section-head"><div><p class="eyebrow">Related Products</p><h2>More from this shelf</h2></div></div>
+        <div id="relatedGrid" class="mini-grid"></div>
+      </section>
+      <section class="section">
+        <div class="section-head"><div><p class="eyebrow">Similar Products</p><h2>Same vibe, different pick</h2></div></div>
+        <div id="similarGrid" class="mini-grid"></div>
+      </section>
+    </main>
+
+    <button id="cartFab" class="cart-fab"><span>Cart</span><strong id="cartCount">0</strong></button>
+    <aside id="cartDrawer" class="cart-drawer" aria-hidden="true">
+      <div class="drawer-head"><div><p class="eyebrow">Demo cart</p><h2>Your cart</h2><small id="deliveryEta">ETA 18-24 min</small></div><button class="icon-btn" id="closeCart">x</button></div>
+      <div id="couponBox" class="coupon-box"></div>
+      <div id="cartItems" class="cart-items"></div>
+      <div id="recoveryKit" class="recovery-kit" hidden></div>
+      <div class="totals">
+        <div><span>Subtotal</span><strong id="subtotal">Rs. 0</strong></div>
+        <div><span>Estimated savings</span><strong id="savings">Rs. 0</strong></div>
+        <div><span>Coupon</span><strong id="couponDiscount">-Rs. 0</strong></div>
+        <div><span>Platform fee</span><strong id="platformFee">Rs. 0</strong></div>
+        <div><span>GST</span><strong id="gst">Rs. 0</strong></div>
+        <div class="grand"><span>Grand total</span><strong id="grandTotal">Rs. 0</strong></div>
+      </div>
+      <div class="drawer-actions">
+        <button id="shareCart" class="secondary-btn ripple">Share cart</button>
+        <button id="downloadReceipt" class="secondary-btn ripple">Download invoice</button>
+        <button id="placeOrder" class="primary-btn ripple">Place order</button>
+      </div>
+      <p class="microcopy">Fictional cart only. No payment or delivery.</p>
+    </aside>
+    <div id="overlay" class="overlay" hidden></div>
+    <div id="successModal" class="modal-backdrop" hidden>
+      <div class="modal success">
+        <div class="tick">OK</div>
+        <h2>Order Placed Successfully</h2>
+        <p>No payment has been processed. No order has been placed. Nothing will be delivered.</p>
+        <button class="primary-btn" id="backHome">Return home</button>
+      </div>
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/store.js"></script>
+    <script src="js/cart-shared.js"></script>
+    <script src="js/product.js"></script>
+  </body>
+</html>

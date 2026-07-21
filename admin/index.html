@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DrinkIt Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="admin.css">
+  </head>
+  <body>
+    <main class="admin-shell">
+      <aside class="admin-sidebar">
+        <a class="brand" href="../">
+          <span class="brand-mark">D</span>
+          <span class="brand-copy"><strong>DrinkIt</strong><small>Admin</small></span>
+        </a>
+        <nav>
+          <button class="active" data-tab="dashboard">Dashboard</button>
+          <button data-tab="products">Products</button>
+          <button data-tab="categories">Categories</button>
+          <button data-tab="settings">Settings</button>
+        </nav>
+        <button id="logoutBtn" class="secondary-btn">Logout</button>
+      </aside>
+
+      <section class="admin-main">
+        <div class="admin-top">
+          <div>
+            <p class="eyebrow">Firestore control room</p>
+            <h1>DrinkIt Admin</h1>
+          </div>
+          <button id="seedBtn" class="primary-btn">Seed Firestore</button>
+        </div>
+
+        <section id="dashboard" class="admin-tab active">
+          <div class="stat-grid">
+            <article><span>Total Products</span><strong id="productCount">0</strong></article>
+            <article><span>Total Categories</span><strong id="categoryCount">0</strong></article>
+            <article><span>Featured</span><strong id="featuredCount">0</strong></article>
+            <article><span>Unavailable</span><strong id="unavailableCount">0</strong></article>
+            <article><span>Average Price</span><strong id="avgPrice">Rs. 0</strong></article>
+            <article><span>Highest Price</span><strong id="highPrice">Rs. 0</strong></article>
+            <article><span>Lowest Price</span><strong id="lowPrice">Rs. 0</strong></article>
+            <article><span>Available</span><strong id="availableCount">0</strong></article>
+          </div>
+          <div class="admin-card">
+            <div class="section-head"><h2>Recently Edited</h2></div>
+            <div id="recentEdited" class="table"></div>
+          </div>
+          <p class="notice">This dashboard edits demo catalog data only. It never stores orders, users, addresses, OTPs, payments, analytics, or customer records.</p>
+        </section>
+
+        <section id="products" class="admin-tab">
+          <div class="admin-card">
+            <div class="section-head"><h2>Product Management</h2><button id="newProduct" class="primary-btn">Add Product</button></div>
+            <form id="productForm" class="edit-grid"></form>
+            <div id="imagePreviewWrap" class="image-preview" hidden><img id="imagePreview" alt="Preview"></div>
+          </div>
+          <div class="admin-card toolbar-card">
+            <div class="bulk-toolbar">
+              <label class="check"><input id="selectAllProducts" type="checkbox"> Select all visible</label>
+              <button id="bulkAvailable" class="secondary-btn" type="button">Mark available</button>
+              <button id="bulkUnavailable" class="secondary-btn" type="button">Mark unavailable</button>
+              <button id="bulkDelete" class="secondary-btn danger" type="button">Bulk delete</button>
+              <button id="exportCsv" class="secondary-btn" type="button">CSV Export</button>
+              <button id="exportJson" class="secondary-btn" type="button">JSON Export</button>
+              <label class="file-btn secondary-btn">CSV Import<input id="importCsv" type="file" accept=".csv,text/csv" hidden></label>
+              <label class="file-btn secondary-btn">JSON Import<input id="importJson" type="file" accept=".json,application/json" hidden></label>
+            </div>
+            <input id="adminProductSearch" class="admin-search" type="search" placeholder="Search products by name, brand, category">
+            <div id="productTable" class="table"></div>
+          </div>
+        </section>
+
+        <section id="categories" class="admin-tab">
+          <div class="admin-card">
+            <div class="section-head"><h2>Category Management</h2><button id="newCategory" class="primary-btn">Create Category</button></div>
+            <form id="categoryForm" class="edit-grid"></form>
+          </div>
+          <div id="categoryTable" class="table admin-card"></div>
+        </section>
+
+        <section id="settings" class="admin-tab">
+          <form id="settingsForm" class="admin-card edit-grid"></form>
+        </section>
+      </section>
+    </main>
+
+    <div id="loginModal" class="modal-backdrop">
+      <form id="loginForm" class="modal">
+        <p class="eyebrow">Admin Login</p>
+        <h2>Sign in</h2>
+        <input id="username" type="text" placeholder="Username" autocomplete="username">
+        <input id="password" type="password" placeholder="Password" autocomplete="current-password">
+        <button class="primary-btn" type="submit">Login</button>
+        <p id="loginError" class="error" hidden>Invalid username or password.</p>
+      </form>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+    <script src="../firebase-config.js"></script>
+    <script src="../js/data.js"></script>
+    <script src="../js/store.js"></script>
+    <script src="admin.js"></script>
+  </body>
+</html>
