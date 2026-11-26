@@ -16,13 +16,13 @@
     return `
       <article class="product-card">
         <a class="product-link" href="product.html?id=${encodeURIComponent(product.id)}"><img ${imageAttrs(product)} alt="${product.name}" loading="lazy"></a>
-        <button class="heart saved" data-wish="${product.id}">Heart</button>
+        <button class="heart saved" data-wish="${product.id}" aria-label="Remove from wishlist">♥</button>
         <div class="product-body">
           <p class="chip">${product.category}</p>
           <h3><a href="product.html?id=${encodeURIComponent(product.id)}">${product.name}</a></h3>
-          <p class="muted">${product.brand} | ${product.size}</p>
-          <div class="price-row"><strong>${rupee(product.price)}</strong><span>${rupee(product.mrp)}</span><em>Save ${rupee(product.savings)}</em></div>
-          <button class="add-btn ripple" data-add="${product.id}">Add</button>
+          <p class="muted">${product.brand} · ${product.size}</p>
+          <div class="price-row"><strong>${rupee(product.price)}</strong><span>${rupee(product.mrp)}</span><em>Save ${rupee(product.savings || product.mrp - product.price)}</em></div>
+          <button class="add-btn ripple" data-add="${product.id}" ${product.available ? "" : "disabled"}>${product.available ? "Add to Cart" : "Out of stock"}</button>
         </div>
       </article>`;
   }
@@ -33,6 +33,9 @@
   }
 
   function renderCart() {
+    if (!state.products || !state.products.length) {
+      state.products = (window.DrinkItSeed && window.DrinkItSeed.products) || [];
+    }
     const t = Cart.calculateTotals(state.cart, state.products, state.settings, state.activeCoupon);
     $("cartCount").textContent = t.itemCount;
     $("deliveryEta").textContent = `ETA ${state.settings.deliveryEta || "18-24 min"}`;
@@ -47,7 +50,13 @@
     if ($("couponBox")) {
       $("couponBox").innerHTML = (state.settings.demoCoupons || []).map((coupon) => {
         const active = state.activeCoupon === coupon.code;
-        return `<button class="coupon ${active ? "active" : ""}" data-coupon="${coupon.code}"><strong>${coupon.code}</strong><span>${coupon.label}</span></button>`;
+        const minText = coupon.minTotal ? `Min Rs. ${coupon.minTotal.toLocaleString("en-IN")}` : coupon.minItems ? `Min ${coupon.minItems} items` : "";
+        return `
+          <button class="coupon ${active ? "active" : ""}" data-coupon="${coupon.code}">
+            <strong>${coupon.code}</strong>
+            <span>${coupon.label}</span>
+            ${minText ? `<small class="coupon-min">${minText}</small>` : ""}
+          </button>`;
       }).join("");
     }
     if ($("recoveryKit")) {
@@ -63,12 +72,16 @@
   }
 
   function render() {
+    if (!state.products || !state.products.length) {
+      state.products = (window.DrinkItSeed && window.DrinkItSeed.products) || [];
+    }
     const query = $("wishlistSearch").value.toLowerCase();
     const items = state.products.filter((item) => state.wishlist.has(item.id) && `${item.name} ${item.brand} ${item.category}`.toLowerCase().includes(query));
     $("wishlistGrid").innerHTML = items.length ? items.map(card).join("") : `<div class="empty"><div class="empty-illustration">DI</div><strong>No wishlist items yet</strong><span>Heart products from the home page to save them locally.</span></div>`;
   }
 
   function openCart() {
+    renderCart();
     $("cartDrawer").classList.add("open");
     $("overlay").hidden = false;
   }

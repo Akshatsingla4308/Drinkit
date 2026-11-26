@@ -17,14 +17,14 @@
     return `
       <article class="product-card compact-card">
         <a class="product-link" href="product.html?id=${encodeURIComponent(product.id)}"><img ${imageAttrs(product)} alt="${product.name}" loading="lazy"></a>
-        <button class="heart ${saved ? "saved" : ""}" data-wish="${product.id}">Heart</button>
+        <button class="heart ${saved ? "saved" : ""}" data-wish="${product.id}">♥</button>
         <div class="product-body">
           <p class="chip">${product.offer || product.category}</p>
           <h3><a href="product.html?id=${encodeURIComponent(product.id)}">${product.name}</a></h3>
-          <p class="muted">${product.brand} | ${product.size}</p>
-          <div class="rating">Star ${product.rating}<span>${product.available ? "In stock" : "Unavailable"}</span></div>
+          <p class="muted">${product.brand} · ${product.size}</p>
+          <div class="rating"><span>★ ${product.rating}</span><span>${product.available ? "In stock" : "Unavailable"}</span></div>
           <div class="price-row"><strong>${rupee(product.price)}</strong><span>${rupee(product.mrp)}</span></div>
-          <button class="add-btn ripple" data-add="${product.id}" ${product.available ? "" : "disabled"}>Add</button>
+          <button class="add-btn ripple" data-add="${product.id}" ${product.available ? "" : "disabled"}>${product.available ? "Add to Cart" : "Out of stock"}</button>
         </div>
       </article>`;
   }
@@ -38,12 +38,21 @@
     if (!$("couponBox")) return;
     $("couponBox").innerHTML = (state.settings.demoCoupons || []).map((coupon) => {
       const active = state.activeCoupon === coupon.code;
-      return `<button class="coupon ${active ? "active" : ""}" data-coupon="${coupon.code}"><strong>${coupon.code}</strong><span>${coupon.label}</span></button>`;
+      const minText = coupon.minTotal ? `Min Rs. ${coupon.minTotal.toLocaleString("en-IN")}` : coupon.minItems ? `Min ${coupon.minItems} items` : "";
+      return `
+        <button class="coupon ${active ? "active" : ""}" data-coupon="${coupon.code}">
+          <strong>${coupon.code}</strong>
+          <span>${coupon.label}</span>
+          ${minText ? `<small class="coupon-min">${minText}</small>` : ""}
+        </button>`;
     }).join("");
     if ($("couponDiscount")) $("couponDiscount").textContent = `-${rupee(totals.coupon)}`;
   }
 
   function renderCart() {
+    if (!state.products || !state.products.length) {
+      state.products = (window.DrinkItSeed && window.DrinkItSeed.products) || [];
+    }
     const t = Cart.calculateTotals(state.cart, state.products, state.settings, state.activeCoupon);
     $("cartCount").textContent = t.itemCount;
     $("deliveryEta").textContent = `ETA ${state.settings.deliveryEta || "18-24 min"}`;
@@ -72,6 +81,7 @@
   }
 
   function openCart() {
+    renderCart();
     $("cartDrawer").classList.add("open");
     $("cartDrawer").setAttribute("aria-hidden", "false");
     $("overlay").hidden = false;
@@ -101,17 +111,35 @@
       <section class="detail-panel">
         <p class="eyebrow">${product.category}</p>
         <h1>${product.name}</h1>
-        <div class="detail-meta"><span>${product.brand}</span><span>${product.size}</span><span>Star ${product.rating}</span><span>${product.offer}</span></div>
+        <div class="detail-meta">
+          <span>${product.brand}</span>
+          <span>${product.size}</span>
+          <span>★ ${product.rating} Rating</span>
+          <span>${product.offer || "Cellar Reserve"}</span>
+        </div>
         <p>${product.description}</p>
-        <div class="price-row"><strong>${rupee(product.price)}</strong><span>${rupee(product.mrp)}</span><em>Save ${rupee(product.savings)}</em></div>
+        <div class="price-row">
+          <strong>${rupee(product.price)}</strong>
+          <span>${rupee(product.mrp)}</span>
+          <em>Save ${rupee(product.savings || product.mrp - product.price)}</em>
+        </div>
         <div class="hero-actions">
-          <button class="primary-btn ripple" data-add="${product.id}">Add to Cart</button>
-          <button class="secondary-btn ripple" data-wish="${product.id}">${state.wishlist.has(product.id) ? "Saved" : "Wishlist"}</button>
+          <button class="primary-btn ripple" data-add="${product.id}" ${product.available ? "" : "disabled"}>${product.available ? "Add to Cellar Cart" : "Out of Stock"}</button>
+          <button class="secondary-btn ripple" data-wish="${product.id}">${state.wishlist.has(product.id) ? "♥ Saved to Wishlist" : "♡ Add to Wishlist"}</button>
         </div>
         <div class="info-grid">
-          <div class="info-panel"><strong>Nutrition/Info</strong><p>${product.nutrition}</p></div>
-          <div class="info-panel"><strong>Product Info</strong><p>${product.info}</p></div>
-          <div class="info-panel"><strong>Demo Notice</strong><p>No payment, order, delivery, address, OTP, or verification is available.</p></div>
+          <div class="info-panel">
+            <strong>Tasting Notes & Character</strong>
+            <p>${product.nutrition}</p>
+          </div>
+          <div class="info-panel">
+            <strong>Cellar Specifications</strong>
+            <p>${product.info}</p>
+          </div>
+          <div class="info-panel">
+            <strong>Savoring Etiquette</strong>
+            <p>Best served at recommended cellar temperature in appropriate crystal glassware. Enjoy responsibly.</p>
+          </div>
         </div>
       </section>`;
     $("relatedGrid").innerHTML = state.products.filter((item) => item.category === product.category && item.id !== product.id).slice(0, 10).map(productCard).join("");
@@ -165,6 +193,7 @@
     });
     $("openCart").addEventListener("click", openCart);
     $("cartFab").addEventListener("click", openCart);
+    if ($("bottomCart")) $("bottomCart").addEventListener("click", openCart);
     $("closeCart").addEventListener("click", closeCart);
     $("overlay").addEventListener("click", closeCart);
     $("shareCart").addEventListener("click", () => {

@@ -3,183 +3,261 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>DrinkIt</title>
-    <meta name="description" content="DrinkIt is a fictional quick-commerce UI demo with realistic carts and shareable receipts.">
+    <title>DrinkIt — Fine Spirits, Single Malts & Curated Cellar Catalogue</title>
+    <meta name="description" content="DrinkIt is a premier luxury beverage and fine spirits catalogue platform. Browse curated single malts, reserve scotches, artisanal craft beers, champagnes, and cellar essentials.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="preconnect" href="https://images.unsplash.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
   </head>
   <body>
     <div class="app-shell">
+      <!-- Luxury Navigation Topbar -->
       <header class="topbar">
-        <a class="brand" href="#" id="logoLink" aria-label="DrinkIt home">
+        <a class="brand" href="#" id="logoLink" aria-label="DrinkIt Cellar Home">
           <span class="brand-mark">D</span>
-          <span class="brand-copy"><strong id="siteName">DrinkIt</strong><small>Fictional quick-cart demo</small></span>
+          <span class="brand-copy">
+            <strong id="siteName">DrinkIt</strong>
+            <small>The Fine Spirits Cellar</small>
+          </span>
         </a>
+
         <div class="search-wrap sticky-search">
-          <span class="search-icon" aria-hidden="true">Search</span>
-          <input id="searchInput" type="search" autocomplete="off" placeholder="Search whisky, beer, snacks, mixers...">
+          <span class="search-icon" aria-hidden="true"></span>
+          <input id="searchInput" type="search" autocomplete="off" placeholder="Search single malts, aged rums, botanical gins, craft beers...">
           <div id="suggestions" class="suggestions" hidden></div>
         </div>
-        <a class="icon-btn" href="wishlist.html" aria-label="Wishlist" title="Wishlist">Heart</a>
-        <button class="icon-btn" id="themeToggle" aria-label="Toggle dark mode" title="Toggle dark mode">Mode</button>
-        <a class="admin-link" href="admin/">Admin</a>
+
+        <a class="icon-btn" href="wishlist.html" aria-label="Wishlist" title="Your Wishlist">
+          <span style="color: var(--gold);">♥</span> Wishlist
+        </a>
+        <button class="icon-btn" id="themeToggle" aria-label="Toggle visual mode" title="Cellar Ambiance">
+          <span>✧</span> Ambiance
+        </button>
+        <a class="admin-link" href="admin/">
+          <span>⚙</span> Admin
+        </a>
       </header>
 
       <main>
+        <!-- Cinematic Editorial Hero -->
         <section class="hero">
-          <div class="hero-media" role="img" aria-label="Premium bottles and party essentials"></div>
           <div class="hero-content">
-            <p class="eyebrow">Premium fictional quick-commerce</p>
-            <h1>Build a party cart that feels real.</h1>
-            <p>Browse a huge demo catalog, use fake offers, share carts, and download a premium invoice-style receipt. No sales, payments, addresses, OTPs, or deliveries exist here.</p>
+            <p class="eyebrow">Curated Cellar · Exceptional Spirits</p>
+            <h1>Curated for the Connoisseur. Sourced for the Occasion.</h1>
+            <p>Explore an expansive portfolio of peerless single malts, reserve blended whiskies, artisanal gins, small-batch tequilas, and cellar vintages. Craft bespoke bar carts and download formal cellar invoices.</p>
             <div class="hero-actions">
-              <a class="primary-btn ripple" href="#catalog">Browse catalog</a>
-              <button class="secondary-btn ripple" id="shareCartTop">Share cart</button>
+              <a class="primary-btn ripple" href="#catalog">Explore Full Cellar</a>
+              <button class="secondary-btn ripple" id="shareCartTop">Share Curated Cart</button>
+            </div>
+            <div style="display: flex; gap: 24px; margin-top: 36px; padding-top: 24px; border-top: 1px solid var(--line);">
+              <div>
+                <strong style="display: block; font-size: 1.3rem; font-family: var(--font-serif); color: var(--gold);">55+</strong>
+                <small style="color: var(--muted); font-size: 0.76rem; letter-spacing: 0.06em; text-transform: uppercase;">Spirits Shelves</small>
+              </div>
+              <div style="border-left: 1px solid var(--line); padding-left: 24px;">
+                <strong style="display: block; font-size: 1.3rem; font-family: var(--font-serif); color: var(--gold);">1,100+</strong>
+                <small style="color: var(--muted); font-size: 0.76rem; letter-spacing: 0.06em; text-transform: uppercase;">Bottles Audited</small>
+              </div>
+              <div style="border-left: 1px solid var(--line); padding-left: 24px;">
+                <strong style="display: block; font-size: 1.3rem; font-family: var(--font-serif); color: var(--gold);">100%</strong>
+                <small style="color: var(--muted); font-size: 0.76rem; letter-spacing: 0.06em; text-transform: uppercase;">Authentic Assets</small>
+              </div>
             </div>
           </div>
+          <div class="hero-media" role="img" aria-label="Studio bottle photography of rare whisky and crystal glassware"></div>
         </section>
 
+        <!-- Party Builder / Bespoke Bar Curator -->
         <section class="section">
           <div class="section-head">
             <div>
-              <p class="eyebrow">Party Builder</p>
-              <h2>Auto-fill a balanced demo cart</h2>
+              <p class="eyebrow">The Sommelier's Bar Kit</p>
+              <h2>Curate a Balanced Bar in One Click</h2>
             </div>
           </div>
           <div id="partyBuilder" class="party-builder"></div>
         </section>
 
+        <!-- Category Exploration Rail -->
         <section class="section compact">
           <div class="section-head">
             <div>
-              <p class="eyebrow">Categories</p>
-              <h2>Shop by shelf</h2>
+              <p class="eyebrow">Explore by Shelf</p>
+              <h2>The Cellar Shelves</h2>
             </div>
             <div class="segmented" id="availabilityFilter">
-              <button class="active ripple" data-availability="all">All</button>
-              <button class="ripple" data-availability="available">In stock</button>
+              <button class="active ripple" data-availability="all">All Shelves</button>
+              <button class="ripple" data-availability="available">In Stock Only</button>
             </div>
           </div>
           <div id="categoryRail" class="category-rail skeleton-zone"></div>
         </section>
 
+        <!-- Offers & Privileges Band -->
         <section class="section offers-band">
           <div>
-            <p class="eyebrow">Demo Offers</p>
-            <h2>Weekend Party Sale</h2>
+            <p class="eyebrow">Cellar Privileges</p>
+            <h2>Exclusive Weekend Cellar Reserves</h2>
           </div>
           <div class="offer-chips">
             <span>Buy 2 Get 5% Off</span>
-            <span>Festival Offers</span>
-            <span>Happy Hours</span>
-            <span>Premium Collection</span>
+            <span>Festival Cellar Reserve</span>
+            <span>Connoisseur Happy Hours</span>
+            <span>Single Malt Vault</span>
           </div>
         </section>
 
+        <!-- Featured Shelves (Curated Rails) -->
         <section class="shelf-wrap" id="featuredShelves"></section>
 
+        <!-- Full Product Catalogue & Filtering System -->
         <section class="catalog-shell" id="catalog">
           <aside class="filters" aria-label="Product filters">
             <div class="filter-head">
-              <h2>Filters</h2>
-              <button id="clearFilters" class="text-btn">Clear</button>
+              <h2>Cellar Filters</h2>
+              <button id="clearFilters" class="text-btn">Reset All</button>
             </div>
             <label>Category<select id="categoryFilter"><option value="">All categories</option></select></label>
-            <label>Brand<select id="brandFilter"><option value="">All brands</option></select></label>
-            <label>Type<select id="typeFilter"><option value="">All types</option></select></label>
-            <label>Size<select id="sizeFilter"><option value="">All sizes</option></select></label>
-            <label>Minimum rating<input id="ratingFilter" type="range" min="0" max="5" step="0.5" value="0"><span id="ratingValue">Any</span></label>
-            <label>Max price<input id="priceFilter" type="range" min="99" max="30000" step="100" value="30000"><span id="priceValue">Any</span></label>
+            <label>Distiller / Brand<select id="brandFilter"><option value="">All brands</option></select></label>
+            <label>Classification<select id="typeFilter"><option value="">All classifications</option></select></label>
+            <label>Bottle Size<select id="sizeFilter"><option value="">All sizes</option></select></label>
+            <label>Minimum Cellar Rating<input id="ratingFilter" type="range" min="0" max="5" step="0.5" value="0"><span id="ratingValue">Any rating</span></label>
+            <label>Maximum Price (Rs.)<input id="priceFilter" type="range" min="99" max="30000" step="100" value="30000"><span id="priceValue">Up to Rs. 30,000</span></label>
           </aside>
 
           <section class="products-area">
             <div class="section-head">
               <div>
-                <p class="eyebrow" id="resultCount">Catalog</p>
-                <h2 id="catalogTitle">Featured Products</h2>
+                <p class="eyebrow" id="resultCount">Cellar Portfolio</p>
+                <h2 id="catalogTitle">Curated Spirits Catalogue</h2>
               </div>
               <select id="sortSelect" class="sort-select" aria-label="Sort products">
-                <option value="featured">Featured</option>
-                <option value="priceAsc">Price: low to high</option>
-                <option value="priceDesc">Price: high to low</option>
-                <option value="rating">Top rated</option>
-                <option value="recent">Recently added</option>
+                <option value="featured">Featured Picks</option>
+                <option value="priceAsc">Price: Low to High</option>
+                <option value="priceDesc">Price: High to Low</option>
+                <option value="rating">Top Rated by Connoisseurs</option>
+                <option value="recent">Recently Added to Cellar</option>
               </select>
             </div>
             <div id="productGrid" class="product-grid skeleton-zone"></div>
-            <div class="load-more-wrap"><button id="loadMore" class="secondary-btn ripple">Load more</button></div>
+            <div class="load-more-wrap">
+              <button id="loadMore" class="secondary-btn ripple">Load More Spirits</button>
+            </div>
           </section>
+        </section>
+
+        <!-- Editorial About & Responsible Drinking Section -->
+        <section class="section" style="margin-top: 80px; padding: 48px; border-radius: var(--radius-lg); border: 1px solid var(--line-gold); background: linear-gradient(135deg, #141417 0%, #0B0B0D 100%);">
+          <div style="max-width: 840px; margin: 0 auto; text-align: center;">
+            <p class="eyebrow">The DrinkIt Standard</p>
+            <h2 style="font-size: 2.4rem; margin: 8px 0 16px;">The Art of Elevated Drinking</h2>
+            <p style="color: var(--muted); font-size: 1.05rem; line-height: 1.8; margin-bottom: 24px;">
+              DrinkIt was designed for discerning enthusiasts who view beverages not merely as refreshments, but as expressions of terroir, craftsmanship, and heritage. From the peat bogs of Islay to the sun-drenched vineyards of Maharashtra, our catalogue brings together legendary distilleries and craft artisans.
+            </p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; text-align: left; margin-top: 36px;">
+              <div style="padding: 20px; border-radius: var(--radius-sm); background: var(--bg-card); border: 1px solid var(--line);">
+                <strong style="color: var(--gold); display: block; margin-bottom: 6px; font-size: 0.95rem;">Temperature Controlled</strong>
+                <p style="font-size: 0.84rem; color: var(--muted);">All wines and craft beers are held in climate-optimised conditions to preserve delicate aromatic profiles.</p>
+              </div>
+              <div style="padding: 20px; border-radius: var(--radius-sm); background: var(--bg-card); border: 1px solid var(--line);">
+                <strong style="color: var(--gold); display: block; margin-bottom: 6px; font-size: 0.95rem;">Authentic Provenance</strong>
+                <p style="font-size: 0.84rem; color: var(--muted);">Every bottle in our demo database reflects genuine distillary specifications, bottle volumes, and realistic pricing.</p>
+              </div>
+              <div style="padding: 20px; border-radius: var(--radius-sm); background: var(--bg-card); border: 1px solid var(--line);">
+                <strong style="color: var(--gold); display: block; margin-bottom: 6px; font-size: 0.95rem;">Responsible Connoisseurship</strong>
+                <p style="font-size: 0.84rem; color: var(--muted);">Strict adherence to legal drinking age guidelines. Savor every sip with moderation and purpose.</p>
+              </div>
+            </div>
+          </div>
         </section>
       </main>
 
+      <!-- Comprehensive Luxury Footer -->
       <footer class="footer">
-        <strong>DrinkIt</strong>
-        <p>DrinkIt is a fictional demo website created for frontend practice and entertainment purposes only. No products are sold, no payments are accepted, and no deliveries are made.</p>
+        <strong style="font-size: 2rem;">DrinkIt</strong>
+        <p style="color: var(--gold); letter-spacing: 0.1em; text-transform: uppercase; font-size: 0.8rem; margin-bottom: 16px;">The Fine Spirits & Beverage Cellar</p>
+        <p>DrinkIt is an exhibition e-commerce catalogue interface designed with luxury creative direction. No alcohol is sold, no real payments are collected, and no deliveries are dispatched. Intended strictly for adult audiences of lawful drinking age.</p>
+        <div style="display: flex; justify-content: center; gap: 24px; margin-top: 24px; font-size: 0.82rem; color: var(--muted);">
+          <a href="#catalog">Full Cellar</a>
+          <a href="wishlist.html">Wishlist</a>
+          <a href="admin/">Curator Control Room</a>
+          <a href="#top">Return to Top</a>
+        </div>
+        <p style="margin-top: 24px; font-size: 0.75rem; color: var(--text-tertiary);">© 2026 DrinkIt Luxury Beverage Catalogue. All rights reserved.</p>
       </footer>
     </div>
 
-    <button id="cartFab" class="cart-fab" aria-label="Open cart">
-      <span>Cart</span><strong id="cartCount">0</strong>
+    <!-- Floating Cart Action -->
+    <button id="cartFab" class="cart-fab" aria-label="Open Cellar Cart">
+      <span>Cellar Cart</span><strong id="cartCount">0</strong>
     </button>
 
+    <!-- Mobile Bottom Navigation -->
     <nav class="bottom-nav" aria-label="Mobile navigation">
-      <a href="#">Home</a>
-      <a href="#catalog">Search</a>
-      <a href="wishlist.html">Wishlist</a>
-      <button id="bottomCart">Cart</button>
-      <a href="admin/">Menu</a>
+      <a href="#"><span>⌂</span>Home</a>
+      <a href="#catalog"><span>🔍</span>Cellar</a>
+      <a href="wishlist.html"><span>♥</span>Wishlist</a>
+      <button id="bottomCart"><span>🛍</span>Cart</button>
+      <a href="admin/"><span>⚙</span>Admin</a>
     </nav>
 
+    <!-- Cart Drawer Modal -->
     <aside id="cartDrawer" class="cart-drawer" aria-label="Shopping cart" aria-hidden="true">
       <div class="drawer-head">
-        <div><p class="eyebrow">Demo cart</p><h2>Your cart</h2><small id="deliveryEta">ETA 18-24 min</small></div>
-        <button class="icon-btn" id="closeCart" aria-label="Close cart">x</button>
+        <div>
+          <p class="eyebrow">Your Cellar Selection</p>
+          <h2>Cellar Cart</h2>
+          <small id="deliveryEta">ETA 18-24 min (Simulated)</small>
+        </div>
+        <button class="icon-btn" id="closeCart" aria-label="Close cart">✕</button>
       </div>
       <div id="couponBox" class="coupon-box"></div>
       <div id="cartItems" class="cart-items"></div>
       <div id="recoveryKit" class="recovery-kit" hidden></div>
       <div class="totals">
-        <div><span>Subtotal</span><strong id="subtotal">Rs. 0</strong></div>
-        <div><span>Estimated savings</span><strong id="savings">Rs. 0</strong></div>
-        <div><span>Coupon</span><strong id="couponDiscount">-Rs. 0</strong></div>
-        <div><span>Platform fee</span><strong id="platformFee">Rs. 0</strong></div>
-        <div><span>GST</span><strong id="gst">Rs. 0</strong></div>
-        <div class="grand"><span>Grand total</span><strong id="grandTotal">Rs. 0</strong></div>
+        <div><span>Subtotal (MRP)</span><strong id="subtotal">Rs. 0</strong></div>
+        <div><span>Cellar Savings</span><strong id="savings">Rs. 0</strong></div>
+        <div><span>Privilege Coupon</span><strong id="couponDiscount">-Rs. 0</strong></div>
+        <div><span>Cellar Platform Fee</span><strong id="platformFee">Rs. 0</strong></div>
+        <div><span>GST (18%)</span><strong id="gst">Rs. 0</strong></div>
+        <div class="grand"><span>Grand Total</span><strong id="grandTotal">Rs. 0</strong></div>
       </div>
       <div class="drawer-actions">
-        <button id="shareCart" class="secondary-btn ripple">Share cart</button>
-        <button id="downloadReceipt" class="secondary-btn ripple">Download invoice</button>
-        <button id="placeOrder" class="primary-btn ripple">Place order</button>
+        <button id="shareCart" class="secondary-btn ripple">Share Cart Link</button>
+        <button id="downloadReceipt" class="secondary-btn ripple">Download Cellar Invoice</button>
+        <button id="placeOrder" class="primary-btn ripple">Place Demo Order</button>
       </div>
-      <p class="microcopy">Fictional cart only. No checkout, address, OTP, payment, or delivery is available.</p>
+      <p class="microcopy">Fictional cart demonstration. No checkout, real payment, or delivery is processed.</p>
     </aside>
     <div id="overlay" class="overlay" hidden></div>
 
+    <!-- Guest Name Welcome Modal -->
     <div id="guestModal" class="modal-backdrop" hidden>
       <form class="modal" id="guestForm">
         <p class="eyebrow">Welcome to DrinkIt</p>
-        <h2>Enter your name</h2>
-        <input id="guestName" type="text" placeholder="Rahul, Akshay, Party Boy..." autofocus>
-        <button class="primary-btn ripple" type="submit">Continue</button>
+        <h2>Enter Connoisseur Name</h2>
+        <input id="guestName" type="text" placeholder="Your name (e.g. Vikram, Elena, Dev)..." autofocus>
+        <button class="primary-btn ripple" type="submit">Enter the Cellar</button>
       </form>
     </div>
 
+    <!-- Order Success Modal -->
     <div id="successModal" class="modal-backdrop" hidden>
       <div class="modal success">
-        <div class="tick">OK</div>
-        <h2>Order Placed Successfully</h2>
-        <p>This is a fictional demonstration website.</p>
-        <p>No payment has been processed. No order has been placed. Nothing will be delivered.</p>
-        <button class="primary-btn ripple" id="backHome">Return home</button>
+        <div class="tick">✓</div>
+        <h2>Cellar Order Registered</h2>
+        <p>This is a fictional demonstration platform.</p>
+        <p>No payment has been deducted. No delivery will occur. Enjoy exploring our luxury beverage catalogue!</p>
+        <button class="primary-btn ripple" id="backHome">Return to Cellar</button>
       </div>
     </div>
 
+    <!-- Scripts -->
     <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
     <script src="firebase-config.js"></script>
+    <script src="js/product-images.js"></script>
     <script src="js/data.js"></script>
     <script src="js/store.js"></script>
     <script src="js/cart-shared.js"></script>

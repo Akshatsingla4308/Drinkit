@@ -3,72 +3,144 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>DrinkIt Product</title>
+    <title>DrinkIt — Bottle Specifications & Tasting Profile</title>
+    <meta name="description" content="View detailed tasting profiles, bottle provenance, volume, ABV, and pairing suggestions for fine spirits.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
   </head>
   <body>
     <main class="detail-shell">
+      <!-- Luxury Topbar -->
       <header class="topbar">
         <a class="brand" href="./">
           <span class="brand-mark">D</span>
-          <span class="brand-copy"><strong>DrinkIt</strong><small>Product detail</small></span>
+          <span class="brand-copy">
+            <strong>DrinkIt</strong>
+            <small>Cellar Portfolio</small>
+          </span>
         </a>
-        <div class="search-wrap"><span class="search-icon"></span><input id="detailSearch" placeholder="Search and return home"></div>
-        <a class="icon-btn" href="wishlist.html">Heart</a>
-        <button class="icon-btn" id="openCart">Cart</button>
+        <div class="search-wrap">
+          <span class="search-icon" aria-hidden="true"></span>
+          <input id="detailSearch" placeholder="Search another spirit or return to cellar...">
+        </div>
+        <a class="icon-btn" href="wishlist.html" aria-label="Wishlist">
+          <span style="color: var(--gold);">♥</span> Wishlist
+        </a>
+        <button class="icon-btn" id="openCart">
+          <span>🛍</span> Cellar Cart
+        </button>
       </header>
 
+      <!-- Editorial Product Detail Grid -->
       <section id="productDetail" class="detail-grid"></section>
+
+      <!-- Frequently Bought Together / Paired Mixers -->
       <section class="section">
-        <div class="section-head"><div><p class="eyebrow">Frequently Bought Together</p><h2>Complete the cart</h2></div></div>
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">The Sommelier's Pairing</p>
+            <h2>Frequently Paired With</h2>
+          </div>
+        </div>
         <div id="togetherGrid" class="mini-grid"></div>
       </section>
+
+      <!-- Related Products from Same Category -->
       <section class="section">
-        <div class="section-head"><div><p class="eyebrow">Related Products</p><h2>More from this shelf</h2></div></div>
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">From the Same Shelf</p>
+            <h2>Explore Related Spirits</h2>
+          </div>
+        </div>
         <div id="relatedGrid" class="mini-grid"></div>
       </section>
+
+      <!-- Similar Picks -->
       <section class="section">
-        <div class="section-head"><div><p class="eyebrow">Similar Products</p><h2>Same vibe, different pick</h2></div></div>
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Alternative Distillations</p>
+            <h2>Similar Taste Profiles</h2>
+          </div>
+        </div>
         <div id="similarGrid" class="mini-grid"></div>
       </section>
+
+      <!-- Luxury Footer -->
+      <footer class="footer">
+        <strong style="font-size: 1.8rem;">DrinkIt</strong>
+        <p style="color: var(--gold); letter-spacing: 0.1em; text-transform: uppercase; font-size: 0.78rem; margin-bottom: 12px;">The Fine Spirits Cellar</p>
+        <p>DrinkIt is an exhibition luxury beverage catalogue demo. No payments, deliveries, or transactions exist. Please savor alcoholic beverages responsibly.</p>
+        <div style="display: flex; justify-content: center; gap: 24px; margin-top: 20px; font-size: 0.82rem; color: var(--muted);">
+          <a href="./">Return to Cellar</a>
+          <a href="wishlist.html">Wishlist</a>
+          <a href="admin/">Admin Control</a>
+        </div>
+      </footer>
     </main>
 
-    <button id="cartFab" class="cart-fab"><span>Cart</span><strong id="cartCount">0</strong></button>
+    <!-- Floating Cart Action -->
+    <button id="cartFab" class="cart-fab" aria-label="Open Cart">
+      <span>Cart</span><strong id="cartCount">0</strong>
+    </button>
+
+    <!-- Cart Drawer Modal -->
     <aside id="cartDrawer" class="cart-drawer" aria-hidden="true">
-      <div class="drawer-head"><div><p class="eyebrow">Demo cart</p><h2>Your cart</h2><small id="deliveryEta">ETA 18-24 min</small></div><button class="icon-btn" id="closeCart">x</button></div>
+      <div class="drawer-head">
+        <div>
+          <p class="eyebrow">Your Selection</p>
+          <h2>Cellar Cart</h2>
+          <small id="deliveryEta">ETA 18-24 min (Demo)</small>
+        </div>
+        <button class="icon-btn" id="closeCart">✕</button>
+      </div>
       <div id="couponBox" class="coupon-box"></div>
       <div id="cartItems" class="cart-items"></div>
       <div id="recoveryKit" class="recovery-kit" hidden></div>
       <div class="totals">
-        <div><span>Subtotal</span><strong id="subtotal">Rs. 0</strong></div>
-        <div><span>Estimated savings</span><strong id="savings">Rs. 0</strong></div>
-        <div><span>Coupon</span><strong id="couponDiscount">-Rs. 0</strong></div>
-        <div><span>Platform fee</span><strong id="platformFee">Rs. 0</strong></div>
-        <div><span>GST</span><strong id="gst">Rs. 0</strong></div>
-        <div class="grand"><span>Grand total</span><strong id="grandTotal">Rs. 0</strong></div>
+        <div><span>Subtotal (MRP)</span><strong id="subtotal">Rs. 0</strong></div>
+        <div><span>Cellar Savings</span><strong id="savings">Rs. 0</strong></div>
+        <div><span>Coupon Privilege</span><strong id="couponDiscount">-Rs. 0</strong></div>
+        <div><span>Cellar Fee</span><strong id="platformFee">Rs. 0</strong></div>
+        <div><span>GST (18%)</span><strong id="gst">Rs. 0</strong></div>
+        <div class="grand"><span>Grand Total</span><strong id="grandTotal">Rs. 0</strong></div>
       </div>
       <div class="drawer-actions">
-        <button id="shareCart" class="secondary-btn ripple">Share cart</button>
-        <button id="downloadReceipt" class="secondary-btn ripple">Download invoice</button>
-        <button id="placeOrder" class="primary-btn ripple">Place order</button>
+        <button id="shareCart" class="secondary-btn ripple">Share Cart Link</button>
+        <button id="downloadReceipt" class="secondary-btn ripple">Download Cellar Invoice</button>
+        <button id="placeOrder" class="primary-btn ripple">Place Demo Order</button>
       </div>
-      <p class="microcopy">Fictional cart only. No payment or delivery.</p>
+      <p class="microcopy">Fictional demonstration only. No products will be delivered.</p>
     </aside>
     <div id="overlay" class="overlay" hidden></div>
+
+    <!-- Success Modal -->
     <div id="successModal" class="modal-backdrop" hidden>
       <div class="modal success">
-        <div class="tick">OK</div>
-        <h2>Order Placed Successfully</h2>
-        <p>No payment has been processed. No order has been placed. Nothing will be delivered.</p>
-        <button class="primary-btn" id="backHome">Return home</button>
+        <div class="tick">✓</div>
+        <h2>Order Demo Registered</h2>
+        <p>No payment has been charged. No products will be dispatched.</p>
+        <button class="primary-btn ripple" id="backHome">Return Home</button>
       </div>
     </div>
+
+    <!-- Mobile Navigation -->
+    <nav class="bottom-nav" aria-label="Mobile navigation">
+      <a href="./"><span>⌂</span>Home</a>
+      <a href="./#catalog"><span>🔍</span>Cellar</a>
+      <a href="wishlist.html"><span>♥</span>Wishlist</a>
+      <button id="bottomCart"><span>🛍</span>Cart</button>
+      <a href="admin/"><span>⚙</span>Admin</a>
+    </nav>
+
+    <!-- Scripts -->
     <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
     <script src="firebase-config.js"></script>
+    <script src="js/product-images.js"></script>
     <script src="js/data.js"></script>
     <script src="js/store.js"></script>
     <script src="js/cart-shared.js"></script>

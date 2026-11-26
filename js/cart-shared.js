@@ -1,18 +1,43 @@
+/**
+ * DRINKIT — SHARED CART & RECEIPT UTILITIES
+ */
 (function () {
-  const placeholder = () => (window.DrinkItSeed && window.DrinkItSeed.placeholder) || "";
+  const placeholder = () => (window.DrinkItImages && window.DrinkItImages.placeholder) || (window.DrinkItSeed && window.DrinkItSeed.placeholder) || "";
 
   function rupee(value) {
     return `Rs. ${Math.round(Number(value) || 0).toLocaleString("en-IN")}`;
   }
 
+  // Safe error handler that never throws syntax errors
+  window.DrinkItHandleImageError = function (img) {
+    if (!img) return;
+    const fallback = img.getAttribute("data-fallback");
+    if (fallback && img.src !== fallback && !img.dataset.failedOnce) {
+      img.dataset.failedOnce = "1";
+      img.src = fallback;
+    } else {
+      img.onerror = null;
+      img.src = placeholder();
+    }
+  };
+
   function imageAttrs(product) {
-    const fallback = product.fallbackImage || placeholder();
-    return `src="${product.image}" data-fallback="${fallback}" onerror="this.onerror=null;this.src=this.dataset.fallback||'${placeholder()}'"`;
+    const defaultPlaceholder = placeholder();
+    const src = (window.DrinkItImages && window.DrinkItImages.resolveProductImage(product)) || (product && product.image) || defaultPlaceholder;
+    const fallback = (window.DrinkItImages && window.DrinkItImages.resolveCategoryImage(product && product.category)) || (product && product.fallbackImage) || defaultPlaceholder;
+    return `src="${src}" data-fallback="${fallback}" onerror="window.DrinkItHandleImageError(this)" loading="lazy"`;
   }
 
   function cartLines(cart, products) {
+    const pool = (products && products.length) ? products : ((window.DrinkItSeed && window.DrinkItSeed.products) || []);
     return Object.entries(cart || {})
-      .map(([id, qty]) => ({ product: (products || []).find((item) => item.id === id), qty: Number(qty) }))
+      .map(([id, qty]) => {
+        let product = pool.find((item) => item.id === id);
+        if (!product && window.DrinkItSeed && window.DrinkItSeed.products) {
+          product = window.DrinkItSeed.products.find((item) => item.id === id);
+        }
+        return { product, qty: Number(qty) };
+      })
       .filter((line) => line.product && line.qty > 0);
   }
 
@@ -39,9 +64,9 @@
   }
 
   function drawQr(ctx, x, y, text) {
-    ctx.fillStyle = "#111827";
+    ctx.fillStyle = "#1C1C1E";
     ctx.fillRect(x, y, 108, 108);
-    ctx.fillStyle = "#ffffff";
+    ctx.fillStyle = "#C9A96E";
     for (let row = 0; row < 13; row += 1) {
       for (let col = 0; col < 13; col += 1) {
         const code = String(text || "DrinkIt").charCodeAt((row * 13 + col) % String(text || "DrinkIt").length);
@@ -53,44 +78,54 @@
   function downloadReceipt({ cart, products, settings, activeCoupon, websiteName }) {
     const totals = calculateTotals(cart, products, settings, activeCoupon);
     const canvas = document.createElement("canvas");
-    const height = Math.max(640, 560 + totals.lines.length * 64);
+    const height = Math.max(680, 580 + totals.lines.length * 68);
     canvas.width = 980;
     canvas.height = height;
     const ctx = canvas.getContext("2d");
-    ctx.fillStyle = "#f7f4ef";
+    
+    // Luxury dark obsidian cellar receipt
+    ctx.fillStyle = "#0B0B0D";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "#ffffff";
+    
+    ctx.fillStyle = "#141416";
     ctx.fillRect(36, 36, 908, height - 72);
-    ctx.strokeStyle = "#d9c9aa";
-    ctx.lineWidth = 2;
+    
+    ctx.strokeStyle = "#C9A96E";
+    ctx.lineWidth = 1.5;
     ctx.strokeRect(36, 36, 908, height - 72);
 
-    ctx.fillStyle = "#111827";
-    ctx.fillRect(70, 70, 48, 48);
-    ctx.fillStyle = "#f3b347";
-    ctx.font = "800 28px Arial";
-    ctx.fillText("D", 84, 104);
+    // Monogram Box
+    ctx.fillStyle = "#1C1C1E";
+    ctx.fillRect(70, 70, 54, 54);
+    ctx.strokeStyle = "#C9A96E";
+    ctx.lineWidth = 1;
+    ctx.strokeRect(70, 70, 54, 54);
+    ctx.fillStyle = "#C9A96E";
+    ctx.font = "700 32px Georgia";
+    ctx.fillText("D", 86, 108);
 
-    ctx.fillStyle = "#111827";
-    ctx.font = "800 42px Arial";
-    ctx.fillText(websiteName || (settings && settings.websiteName) || "DrinkIt", 132, 100);
-    ctx.font = "700 16px Arial";
-    ctx.fillText("PREMIUM DEMO INVOICE", 132, 128);
-    ctx.font = "15px Arial";
-    ctx.fillStyle = "#6b7280";
-    ctx.fillText(new Date().toLocaleString("en-IN"), 132, 154);
+    ctx.fillStyle = "#F5F1E8";
+    ctx.font = "700 38px Georgia";
+    ctx.fillText(websiteName || (settings && settings.websiteName) || "DrinkIt", 140, 100);
+    ctx.font = "600 14px Arial";
+    ctx.fillStyle = "#C9A96E";
+    ctx.fillText("CURATED SPIRITS & CELLAR DEMO INVOICE", 140, 126);
+    ctx.font = "14px Arial";
+    ctx.fillStyle = "#A6A6A6";
+    ctx.fillText(new Date().toLocaleString("en-IN"), 140, 150);
+    
     drawQr(ctx, 792, 70, JSON.stringify(cart) || "DrinkIt");
-    ctx.fillStyle = "#6b7280";
-    ctx.fillText("DEMO QR", 812, 196);
+    ctx.fillStyle = "#C9A96E";
+    ctx.fillText("CELLAR QR", 808, 196);
 
     let y = 245;
-    ctx.fillStyle = "#111827";
-    ctx.font = "700 17px Arial";
-    ctx.fillText("Item", 70, y);
-    ctx.fillText("Qty", 650, y);
-    ctx.fillText("Total", 790, y);
-    y += 24;
-    ctx.strokeStyle = "#ece3d4";
+    ctx.fillStyle = "#C9A96E";
+    ctx.font = "700 16px Arial";
+    ctx.fillText("SELECTED SPIRIT / BEVERAGE", 70, y);
+    ctx.fillText("QTY", 650, y);
+    ctx.fillText("TOTAL", 790, y);
+    y += 20;
+    ctx.strokeStyle = "rgba(201, 169, 110, 0.3)";
     ctx.beginPath();
     ctx.moveTo(70, y);
     ctx.lineTo(890, y);
@@ -98,11 +133,11 @@
     y += 38;
     ctx.font = "16px Arial";
     totals.lines.forEach(({ product, qty }) => {
-      ctx.fillStyle = "#111827";
+      ctx.fillStyle = "#F5F1E8";
       ctx.fillText(`${product.name} (${product.size})`.slice(0, 54), 70, y);
-      ctx.fillStyle = "#6b7280";
-      ctx.fillText(product.offer || "Demo item", 70, y + 22);
-      ctx.fillStyle = "#111827";
+      ctx.fillStyle = "#A6A6A6";
+      ctx.fillText(product.offer || "Cellar Edition", 70, y + 22);
+      ctx.fillStyle = "#F5F1E8";
       ctx.fillText(String(qty), 660, y);
       ctx.fillText(rupee(product.price * qty), 790, y);
       y += 64;
@@ -110,27 +145,28 @@
     y += 20;
     [
       ["Subtotal (MRP)", totals.subtotal],
-      ["Estimated Savings", -totals.savings],
-      ["Coupon", -totals.coupon],
+      ["Cellar Privileges / Savings", -totals.savings],
+      ["Promo Code Applied", -totals.coupon],
       ["Platform Fee", totals.platform],
       [`GST ${(settings && settings.gstPercent) || 0}%`, totals.gst],
       ["Grand Total", totals.grand]
     ].forEach(([label, value]) => {
-      ctx.font = label === "Grand Total" ? "800 24px Arial" : "17px Arial";
-      ctx.fillStyle = label === "Grand Total" ? "#0f8b6f" : "#111827";
-      ctx.fillText(label, 560, y);
+      ctx.font = label === "Grand Total" ? "700 22px Georgia" : "16px Arial";
+      ctx.fillStyle = label === "Grand Total" ? "#C9A96E" : "#F5F1E8";
+      ctx.fillText(label, 520, y);
       ctx.fillText(`${value < 0 ? "-" : ""}${rupee(Math.abs(value))}`, 790, y);
       y += 36;
     });
 
-    ctx.fillStyle = "#d33f49";
-    ctx.font = "800 18px Arial";
-    ctx.fillText("DEMO RECEIPT", 70, height - 120);
-    ctx.font = "700 15px Arial";
-    ctx.fillText("No Payment Processed  ·  No Products Delivered", 70, height - 92);
-    ctx.fillStyle = "#6b7280";
+    ctx.fillStyle = "#C9A96E";
+    ctx.font = "700 16px Arial";
+    ctx.fillText("VERIFIED CELLAR DEMO RECEIPT", 70, height - 120);
     ctx.font = "14px Arial";
-    ctx.fillText("Fictional DrinkIt UI demo only. No order, address, OTP, or delivery.", 70, height - 64);
+    ctx.fillStyle = "#A6A6A6";
+    ctx.fillText("No Payment Processed · Fictional Demonstration Only · No Products Delivered", 70, height - 94);
+    ctx.fillStyle = "#6E6E73";
+    ctx.font = "13px Arial";
+    ctx.fillText("DrinkIt Luxury Beverage Catalogue · Created for UI/UX Exhibition", 70, height - 70);
 
     const link = document.createElement("a");
     link.download = "drinkit-demo-receipt.png";
@@ -143,7 +179,7 @@
       const piece = document.createElement("span");
       piece.className = "confetti";
       piece.style.left = `${Math.random() * 100}%`;
-      piece.style.background = ["#ffca3a", "#10b981", "#ef4444", "#3b82f6", "#c08923"][i % 5];
+      piece.style.background = ["#C9A96E", "#E0C797", "#B97832", "#F5F1E8", "#2E8B57"][i % 5];
       piece.style.animationDelay = `${Math.random()}s`;
       document.body.appendChild(piece);
       setTimeout(() => piece.remove(), 2600);
@@ -151,10 +187,11 @@
   }
 
   function shareCart(cart, products, settings, activeCoupon) {
-    const totals = calculateTotals(cart, products, settings, activeCoupon);
-    const payload = btoa(unescape(encodeURIComponent(JSON.stringify({ cart, total: Math.round(totals.grand), coupon: activeCoupon || "" }))));
-    const url = `${location.origin}/?cart=${encodeURIComponent(payload)}`;
-    navigator.clipboard?.writeText(url);
+    const encoded = encodeURIComponent(JSON.stringify(cart || {}));
+    const url = `${location.origin}${location.pathname}?cart=${encoded}${activeCoupon ? `&coupon=${activeCoupon}` : ""}`;
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(url).catch(() => {});
+    }
     return url;
   }
 

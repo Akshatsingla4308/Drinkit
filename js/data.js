@@ -110,12 +110,20 @@
     return `https://images.unsplash.com/photo-${seed}?auto=format&fit=crop&w=${width}&q=80`;
   }
 
-  function localProductImage(id) {
-    return `images/products/${id}.jpg`;
+  function localProductImage(id, category, brand) {
+    if (window.DrinkItImages && window.DrinkItImages.resolveProductImage) {
+      return window.DrinkItImages.resolveProductImage({ id, category, brand });
+    }
+    const brandSlug = slug(brand);
+    return `images/products/${brandSlug}.webp`;
   }
 
-  function categoryImage(index) {
-    return remoteImage(categorySeeds[index % categorySeeds.length]);
+  function categoryImage(categoryName) {
+    if (window.DrinkItImages && window.DrinkItImages.resolveCategoryImage) {
+      return window.DrinkItImages.resolveCategoryImage(categoryName);
+    }
+    const catSlug = slug(categoryName);
+    return `images/categories/${catSlug}.webp`;
   }
 
   function rangePrice(category, index, size) {
@@ -135,7 +143,7 @@
     id: slug(name),
     name,
     icon: name.split(" ").map((part) => part[0]).join("").slice(0, 2).toUpperCase(),
-    image: categoryImage(order),
+    image: categoryImage(name),
     order
   }));
 
@@ -168,8 +176,8 @@
         discount,
         rating: Math.min(5, rating),
         description: `${brand} ${variant} ${size} for a realistic fictional DrinkIt cart. Demo Punjab-style pricing, editable from admin, with no real sale or delivery.`,
-        image: localProductImage(id),
-        fallbackImage: categoryImage(catIndex + i),
+        image: localProductImage(id, category.name, brand),
+        fallbackImage: categoryImage(category.name),
         available,
         featured: (i + catIndex) % 5 === 0,
         bestSeller: (i + catIndex) % 7 === 0,
@@ -225,6 +233,6 @@
     products,
     settings,
     alcoholCategories: Array.from(alcoholCategories),
-    placeholder: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='640' viewBox='0 0 800 640'%3E%3Crect width='800' height='640' fill='%23f2efe8'/%3E%3Ccircle cx='400' cy='250' r='90' fill='%23c08923' opacity='.25'/%3E%3Ctext x='400' y='360' text-anchor='middle' font-family='Arial' font-size='42' font-weight='700' fill='%23111827'%3EDrinkIt%3C/text%3E%3Ctext x='400' y='405' text-anchor='middle' font-family='Arial' font-size='22' fill='%236b7280'%3EDemo Product%3C/text%3E%3C/svg%3E"
+    placeholder: (window.DrinkItImages && window.DrinkItImages.placeholder) || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000' viewBox='0 0 800 1000'%3E%3Crect width='800' height='1000' fill='%23141416'/%3E%3Ccircle cx='400' cy='500' r='100' fill='%23C9A96E' opacity='.2'/%3E%3Ctext x='400' y='510' text-anchor='middle' font-family='serif' font-size='48' font-weight='700' fill='%23C9A96E'%3ED%3C/text%3E%3Ctext x='400' y='570' text-anchor='middle' font-family='sans-serif' font-size='18' letter-spacing='4' fill='%23A6A6A6'%3EDRINKIT%3C/text%3E%3C/svg%3E"
   };
 })();

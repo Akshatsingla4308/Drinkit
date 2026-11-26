@@ -36,6 +36,9 @@
   }
 
   function calculateTotals() {
+    if (!state.products || !state.products.length) {
+      state.products = (window.DrinkItSeed && window.DrinkItSeed.products) || [];
+    }
     return Cart.calculateTotals(state.cart, state.products, state.settings, state.activeCoupon);
   }
 
@@ -46,15 +49,15 @@
         <a class="product-link" href="product.html?id=${encodeURIComponent(product.id)}" aria-label="View ${product.name}">
           <img ${imageAttrs(product)} alt="${product.name}" loading="lazy">
         </a>
-        <button class="heart ${saved ? "saved" : ""}" data-wish="${product.id}" aria-label="Wishlist ${product.name}">Heart</button>
+        <button class="heart ${saved ? "saved" : ""}" data-wish="${product.id}" aria-label="Wishlist ${product.name}">♥</button>
         <div class="product-body">
           <p class="chip">${product.offer || product.category}</p>
           <h3><a href="product.html?id=${encodeURIComponent(product.id)}">${product.name}</a></h3>
-          <p class="muted">${product.brand} | ${product.size}</p>
+          <p class="muted">${product.brand} · ${product.size}</p>
           <p class="description">${product.description}</p>
-          <div class="rating">Star ${product.rating} <span>${product.available ? `${product.stock} left` : "Unavailable"}</span></div>
+          <div class="rating"><span>★ ${product.rating}</span> <span>${product.available ? `${product.stock} in stock` : "Unavailable"}</span></div>
           <div class="price-row"><strong>${rupee(product.price)}</strong><span>${rupee(product.mrp)}</span><em>Save ${rupee(product.savings || product.mrp - product.price)}</em></div>
-          <button class="add-btn ripple" data-add="${product.id}" ${product.available ? "" : "disabled"}>${product.available ? "Add" : "Out of stock"}</button>
+          <button class="add-btn ripple" data-add="${product.id}" ${product.available ? "" : "disabled"}>${product.available ? "Add to Cart" : "Out of stock"}</button>
         </div>
       </article>`;
   }
@@ -62,8 +65,7 @@
   function renderCategories() {
     $("categoryRail").innerHTML = state.categories.sort((a, b) => a.order - b.order).map((cat) => `
       <button class="category-chip ripple" data-category="${cat.name}">
-        <img src="${cat.image}" alt="" loading="lazy">
-        <span>${cat.icon}</span>
+        <img src="${cat.image}" alt="${cat.name}" loading="lazy">
         <strong>${cat.name}</strong>
       </button>`).join("");
 
@@ -153,9 +155,10 @@
       ["Premium Party", "Top shelf"]
     ];
     $("partyBuilder").innerHTML = labels.map(([name, note]) => `
-      <button class="party-card ripple" data-party="${name}">
+      <button class="party-kit-card ripple" data-party="${name}">
         <strong>${name}</strong>
         <span>${note}</span>
+        <span class="kit-btn">Select Curated Bar</span>
       </button>`).join("");
   }
 
@@ -173,9 +176,16 @@
   }
 
   function renderCoupons(totals) {
+    if (!$("couponBox")) return;
     $("couponBox").innerHTML = (state.settings.demoCoupons || []).map((coupon) => {
       const active = state.activeCoupon === coupon.code;
-      return `<button class="coupon ${active ? "active" : ""}" data-coupon="${coupon.code}"><strong>${coupon.code}</strong><span>${coupon.label}</span></button>`;
+      const minText = coupon.minTotal ? `Min Rs. ${coupon.minTotal.toLocaleString("en-IN")}` : coupon.minItems ? `Min ${coupon.minItems} items` : "";
+      return `
+        <button class="coupon ${active ? "active" : ""}" data-coupon="${coupon.code}">
+          <strong>${coupon.code}</strong>
+          <span>${coupon.label}</span>
+          ${minText ? `<small class="coupon-min">${minText}</small>` : ""}
+        </button>`;
     }).join("");
     $("couponDiscount").textContent = `-${rupee(totals.coupon)}`;
   }
@@ -225,6 +235,7 @@
   }
 
   function openCart() {
+    renderCart();
     $("cartDrawer").classList.add("open");
     $("cartDrawer").setAttribute("aria-hidden", "false");
     $("overlay").hidden = false;
@@ -489,7 +500,10 @@
     $("siteName").textContent = state.settings.websiteName || "DrinkIt";
     const theme = localStorage.getItem("drinkit_theme");
     if (theme === "dark" || (!theme && state.settings.darkModeDefault)) document.documentElement.classList.add("dark");
-    if (!localStorage.getItem("drinkit_guest")) $("guestModal").hidden = false;
+    if (!localStorage.getItem("drinkit_guest")) {
+      localStorage.setItem("drinkit_guest", "Connoisseur");
+    }
+    if ($("guestModal")) $("guestModal").hidden = true;
     renderPartyBuilder();
     renderCategories();
     populateFilterOptions();

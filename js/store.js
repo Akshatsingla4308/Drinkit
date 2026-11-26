@@ -14,15 +14,39 @@
     settings: { ...window.DrinkItSeed.settings }
   };
 
-  function normalizeDoc(doc) {
-    return { id: doc.id, ...doc.data() };
+  function normalizeItem(collectionName, item) {
+    if (!item) return item;
+    const data = { ...item };
+    if (collectionName === "products") {
+      if (window.DrinkItImages) {
+        data.image = window.DrinkItImages.resolveProductImage(data);
+        data.fallbackImage = window.DrinkItImages.resolveCategoryImage(data.category);
+      }
+      if (typeof data.stock === "number" && data.stock > 0) {
+        data.available = true;
+      }
+    } else if (collectionName === "categories") {
+      if (window.DrinkItImages) {
+        data.image = window.DrinkItImages.resolveCategoryImage(data.name);
+      }
+    }
+    return data;
+  }
+
+  function normalizeDoc(collectionName, doc) {
+    const data = { id: doc.id, ...doc.data() };
+    return normalizeItem(collectionName, data);
   }
 
   async function list(collectionName) {
-    if (!db) return [...local[collectionName]];
+    if (!db) {
+      return (local[collectionName] || []).map((item) => normalizeItem(collectionName, item));
+    }
     const snap = await db.collection(collectionName).get();
-    if (snap.empty && collectionName in local) return [...local[collectionName]];
-    return snap.docs.map(normalizeDoc);
+    if (snap.empty && collectionName in local) {
+      return (local[collectionName] || []).map((item) => normalizeItem(collectionName, item));
+    }
+    return snap.docs.map((doc) => normalizeDoc(collectionName, doc));
   }
 
   async function getSettings() {
